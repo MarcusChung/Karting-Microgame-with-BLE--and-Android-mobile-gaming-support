@@ -53,17 +53,12 @@ public class ExampleBleInteractor : MonoBehaviour
         BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "5"));
     }
 
-    private void vLookAhead()
-    {
-        Debug.Log("characteristic run 6");
-        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "6"));
-    }
-
-    private void vCloseWarning()
+     private void vCloseWarning()
     {
         Debug.Log("characteristic run 7");
-        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "7"));
+        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "6"));
     }
+   
      private void Update()
     {
         if(_isScanning)
@@ -78,9 +73,9 @@ public class ExampleBleInteractor : MonoBehaviour
         bool doneCommand = FindObjectOfType<ArcadeKart>().collisionDone;
         bool isColliding = FindObjectOfType<ArcadeKart>().vCollisionCheck;
         string collisionObjectName = FindObjectOfType<ArcadeKart>().collisionObjectName;
-
+        float collisionSpeed = FindObjectOfType<ArcadeKart>().LocalSpeed();
         if (isColliding && !doneCommand && deviceUuid!= null){
-            Debug.Log("Collision Detected");
+            Debug.Log("Collision Detected at speed: " + collisionSpeed);
             FindObjectOfType<ArcadeKart>().collisionDone = true;
 
             if(collisionObjectName.StartsWith("CrashObject")){
@@ -89,10 +84,12 @@ public class ExampleBleInteractor : MonoBehaviour
                 vSingleLongVibrate();
             } else if (collisionObjectName.StartsWith("StoneRound")){
                 vWarning();
-            } else if (collisionObjectName.StartsWith("DeathRock")){
+            } else if (collisionObjectName.StartsWith("DeathRock") && collisionSpeed < 0.5f){
                 vDyingHeartbeat();
             } else if (collisionObjectName.StartsWith("AheadWarningStone")){
                 vCloseWarning();
+            } else if (collisionObjectName.StartsWith("DeathRock") && collisionSpeed > 0.5f){
+                vSingleLongVibrate();
             }
             else{
                 vTap();

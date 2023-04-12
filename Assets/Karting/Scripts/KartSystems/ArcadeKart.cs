@@ -417,7 +417,7 @@ namespace KartGame.KartSystems
 
         void OnCollisionStay(Collision collision)
         {
-            vCollisionCheck = false;
+            vCollisionCheck = true;
             m_HasCollision = true;
             m_LastCollisionNormal = Vector3.zero;
             float dot = -1.0f;
