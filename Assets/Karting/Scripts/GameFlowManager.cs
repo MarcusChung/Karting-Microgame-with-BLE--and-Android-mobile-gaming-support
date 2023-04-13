@@ -35,7 +35,6 @@ public class GameFlowManager : MonoBehaviour
     [Tooltip("Prefab for the lose game message")]
     public DisplayMessage loseDisplayMessage;
 
-    [SerializeField] private bool allowPhoneVibration;
     public GameState gameState { get; private set; }
 
     public bool autoFindKarts = true;
@@ -47,7 +46,7 @@ public class GameFlowManager : MonoBehaviour
     float m_TimeLoadEndGameScene;
     string m_SceneToLoad;
     float elapsedTimeBeforeEndScene = 0;
-
+    [SerializeField] private bool allowPhoneVibration;
     void Start()
     {
         if (autoFindKarts)
@@ -76,7 +75,6 @@ public class GameFlowManager : MonoBehaviour
         {
 			k.SetCanMove(false);
         }
-        MyFunctionEvent += ShowRaceCountdownAnimation;
         //run race countdown animation
         ShowRaceCountdownAnimation();
         StartCoroutine(ShowObjectivesRoutine());
@@ -96,15 +94,20 @@ public class GameFlowManager : MonoBehaviour
         }
         m_TimeManager.StartRace();
     }
-    public delegate void MyFunctionDelegate();
-    public event MyFunctionDelegate MyFunctionEvent;
-
     public void Vibrate()
     {
         // Make the phone vibrate for half a second
         if (allowPhoneVibration){
         Handheld.Vibrate();
         Invoke("StopVibrating", 0.5f);
+        }
+    }
+
+    public void QuickVibrate()
+    {
+        if (allowPhoneVibration){
+        Handheld.Vibrate();
+        Invoke("StopVibrating", 0.3f);
         }
     }
 
@@ -115,7 +118,7 @@ public class GameFlowManager : MonoBehaviour
 
     void ShowRaceCountdownAnimation() {
         raceCountdownTrigger.Play();
-        Vibrate();
+        // Vibrate();
     }
 
     IEnumerator ShowObjectivesRoutine() {
@@ -131,7 +134,7 @@ public class GameFlowManager : MonoBehaviour
 
     void Update()
     {
-
+        string collisionObjectName = FindObjectOfType<ArcadeKart>().collisionObjectName;
         if (gameState != GameState.Play)
         {
             elapsedTimeBeforeEndScene += Time.deltaTime;
@@ -162,6 +165,9 @@ public class GameFlowManager : MonoBehaviour
 
             if (m_TimeManager.IsFinite && m_TimeManager.IsOver)
                 EndGame(false);
+            if (collisionObjectName.StartsWith("GameOverRock")){
+                EndGame(true);
+            }
         }
     }
 

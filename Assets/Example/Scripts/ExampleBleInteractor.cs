@@ -47,7 +47,7 @@ public class ExampleBleInteractor : MonoBehaviour
         BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "4"));
     }
 
-    private void vDyingHeartbeat()
+    private void vGameOver()
     {
         Debug.Log("characteristic run 5");
         BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "5"));
@@ -55,7 +55,7 @@ public class ExampleBleInteractor : MonoBehaviour
 
      private void vCloseWarning()
     {
-        Debug.Log("characteristic run 7");
+        Debug.Log("characteristic run 6");
         BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "6"));
     }
    
@@ -81,19 +81,21 @@ public class ExampleBleInteractor : MonoBehaviour
             if(collisionObjectName.StartsWith("CrashObject")){
                 vQuickTaps();
             } else if (collisionObjectName.StartsWith("PhysicsBall")){
-                vSingleLongVibrate();
+                vTap();
             } else if (collisionObjectName.StartsWith("StoneRound")){
                 vWarning();
             } else if (collisionObjectName.StartsWith("DeathRock") && collisionSpeed < 0.5f){
-                vDyingHeartbeat();
+                vSingleLongVibrate();
             } else if (collisionObjectName.StartsWith("AheadWarningStone")){
                 vCloseWarning();
             } else if (collisionObjectName.StartsWith("DeathRock") && collisionSpeed > 0.5f){
                 vSingleLongVibrate();
+            } else if (collisionObjectName.StartsWith("GameOverRock")){
+                vGameOver();
             }
             else{
                 vTap();
-                FindObjectOfType<GameFlowManager>().Vibrate();
+                FindObjectOfType<GameFlowManager>().QuickVibrate();
             }
         }
     }
