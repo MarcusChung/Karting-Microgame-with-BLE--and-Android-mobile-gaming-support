@@ -45,13 +45,13 @@ public class DeviceButton : MonoBehaviour
     {
         if (!_isConnected)
         {
-            // FindObjectOfType<GameFlowManager>().bluetoothConnected = true;
+            FindObjectOfType<GameFlowManager>().bluetoothConnected = true;
             _connectCommand = new ConnectToDevice(_deviceUuid, OnConnected, OnDisconnected);
             BleManager.Instance.QueueCommand(_connectCommand);
         }
         else
         {
-            // FindObjectOfType<GameFlowManager>().bluetoothConnected = false;
+            FindObjectOfType<GameFlowManager>().bluetoothConnected = false;
             _connectCommand.Disconnect();
         }
     }

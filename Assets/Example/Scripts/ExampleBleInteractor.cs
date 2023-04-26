@@ -7,95 +7,104 @@ using TMPro;
 
 public class ExampleBleInteractor : MonoBehaviour
 {
-    [SerializeField] private GameObject _deviceButton;
-    [SerializeField] private Transform _deviceList;
-
-    [SerializeField] private int _scanTime = 10;
-
-    private float _scanTimer = 0f;
-
-    private bool _isScanning = false;
+    [SerializeField] private GameObject deviceButton;
+    [SerializeField] private Transform deviceList;
+    [SerializeField] private int scanTime = 10;
+    private float scanTimer = 0f;
+    private bool isScanning = false;
     public string deviceUuid;
     private const string SERVICE_ADDRESS = "180a";
     private const string CHARACTERISTIC_ADDRESS = "2a57";
-   
-
+    private const string CHARACTERISTIC_DATA_0 = "0";
+    private const string CHARACTERISTIC_DATA_1 = "1";
+    private const string CHARACTERISTIC_DATA_2 = "2";
+    private const string CHARACTERISTIC_DATA_3 = "3";
+    private const string CHARACTERISTIC_DATA_4 = "4";
+    private const string CHARACTERISTIC_DATA_5 = "5";
+    private const string CHARACTERISTIC_DATA_6 = "6";
+    private const string CHARACTERISTIC_DATA_7 = "7";
+    private const string CHARACTERISTIC_DATA_8 = "8";
+    private const string CHARACTERISTIC_DATA_9 = "9";
+    private const string CHARACTERISTIC_DATA_10 = ":";
+    private const string CHARACTERISTIC_DATA_11 = ";";
     private string charValue;
-
-
     public void ScanForDevices()
     {
-        if (!_isScanning)
+        if (!isScanning)
         {
-            Debug.Log("Scanning for devices");
-            _isScanning = true;
-            BleManager.Instance.QueueCommand(new DiscoverDevices(OnDeviceFound, _scanTime * 200));
+            isScanning = true;
+            BleManager.Instance.QueueCommand(new DiscoverDevices(OnDeviceFound, scanTime * 200));
         }
     }
 
+    public void Vtest()
+    {
+        Debug.Log("characteristic run 0");
+        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, CHARACTERISTIC_DATA_0));
+    }
     public void Vtap()
     {
         Debug.Log("characteristic run 1");
-        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "1"));
+        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, CHARACTERISTIC_DATA_1));
     }
     private void VstoneWallCrash()
     {
         Debug.Log("characteristic run 2");
-        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "2"));
+        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, CHARACTERISTIC_DATA_2));
     }
     private void VsingleLongVibrate()
     {
         Debug.Log("characteristic run 3");
-        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "3"));
+        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, CHARACTERISTIC_DATA_3));
     }
 
     public void Vwarning()
     {
         Debug.Log("characteristic run 4");
-        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "4"));
+        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, CHARACTERISTIC_DATA_4));
     }
 
     private void VdyingHeartBeat()
     {
         Debug.Log("characteristic run 5");
-        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "5"));
+        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, CHARACTERISTIC_DATA_5));
     }
 
     private void VcloseWarning()
     {
         Debug.Log("characteristic run 6");
-        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "6"));
+        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, CHARACTERISTIC_DATA_6));
     }
 
     public void VstrongTap()
     {
         Debug.Log("characteristic run 7");
-        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "7"));
+        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, CHARACTERISTIC_DATA_7));
     }
 
     private void VlightTap()
     {
         Debug.Log("characteristic run 8");
-        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "8"));
+        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, CHARACTERISTIC_DATA_8));
     }
 
     public void VquickTap()
     {
         Debug.Log("characteristic run 9");
-        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "9"));
-    }
-
-    public void VallVariations()
-    {
-        Debug.Log("characteristic run 10");
-        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, "0"));
+        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, CHARACTERISTIC_DATA_9));
     }
 
     public void Vgoal()
     {
-        Debug.Log("characteristic run 11");
-        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, ":"));
+        Debug.Log("characteristic run 10");
+        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, CHARACTERISTIC_DATA_10));
     }
+    public void VallVariations()
+    {
+        Debug.Log("characteristic run 11");
+        BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, CHARACTERISTIC_DATA_11));
+    }
+
 
     // public void ReadFromCharacteristic(){
     //     Debug.Log("characteristic read");
@@ -106,15 +115,25 @@ public class ExampleBleInteractor : MonoBehaviour
     //     BleManager.Instance.QueueCommand(_readFromCharacteristic);
 
     // }
+
+    // call vLoudEngine depending on the local speed of the kart.
+
+        // collisionText.text = charValue;
+        // if (localSpeed > 0.8f && !isColliding && engineCommandCalled == false) 
+        // {
+        //     VquietEngine();
+        // } else if(charValue == "7" && localSpeed > 0.8f){
+        //     engineCommandCalled = true;
+        // }
     private void Update()
     {
-        if (_isScanning)
+        if (isScanning)
         {
-            _scanTimer += Time.deltaTime;
-            if (_scanTimer > _scanTime)
+            scanTimer += Time.deltaTime;
+            if (scanTimer > scanTime)
             {
-                _scanTimer = 0f;
-                _isScanning = false;
+                scanTimer = 0f;
+                isScanning = false;
             }
         }
         bool doneCommand = FindObjectOfType<ArcadeKart>().collisionDone;
@@ -127,15 +146,6 @@ public class ExampleBleInteractor : MonoBehaviour
         {
             Debug.Log("Kart in air");
         }
-        // call vLoudEngine depending on the local speed of the kart.
-
-        // collisionText.text = charValue;
-        // if (localSpeed > 0.8f && !isColliding && engineCommandCalled == false) 
-        // {
-        //     VquietEngine();
-        // } else if(charValue == "7" && localSpeed > 0.8f){
-        //     engineCommandCalled = true;
-        // }
 
         if (isColliding && !doneCommand && deviceUuid != null)
         {
@@ -173,7 +183,7 @@ public class ExampleBleInteractor : MonoBehaviour
             else
             {
                 VlightTap();
-                //FindObjectOfType<GameFlowManager>().QuickVibrate();
+                // FindObjectOfType<GameFlowManager>().QuickVibrate();
             }
         }
     }
@@ -181,7 +191,7 @@ public class ExampleBleInteractor : MonoBehaviour
     private void OnDeviceFound(string name, string device)
     {
         // Instantiate new device buttons
-        DeviceButton button = Instantiate(_deviceButton, _deviceList).GetComponent<DeviceButton>();
+        DeviceButton button = Instantiate(deviceButton, deviceList).GetComponent<DeviceButton>();
         button.Show(name, device);
     }
 }
