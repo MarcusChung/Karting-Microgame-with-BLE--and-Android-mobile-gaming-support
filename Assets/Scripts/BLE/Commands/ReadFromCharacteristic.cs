@@ -40,7 +40,7 @@ namespace Android.BLE.Commands
         /// <param name="characteristicAddress">The UUID of the Characteristic to read from.</param>
         /// <param name="valueReceived">The <see cref="ReadCharacteristicValueReceived"/> that will trigger if a value was read from the Characteristic.</param>
         /// <param name="customGatt"><see langword="true"/> if the GATT Characteristic UUID address is a long-hand, not short-hand.</param>
-        public ReadFromCharacteristic(string deviceAddress, string serviceAddress, string characteristicAddress, ReadCharacteristicValueReceived valueReceived, bool customGatt = false) : base(false, false)
+        public ReadFromCharacteristic(string deviceAddress, string serviceAddress, string characteristicAddress, ReadCharacteristicValueReceived valueReceived, bool customGatt = false) : base(true, false)
         {
             DeviceAddress = deviceAddress;
             Service = serviceAddress;

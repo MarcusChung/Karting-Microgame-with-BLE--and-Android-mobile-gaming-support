@@ -45,11 +45,13 @@ public class DeviceButton : MonoBehaviour
     {
         if (!_isConnected)
         {
+            // FindObjectOfType<GameFlowManager>().bluetoothConnected = true;
             _connectCommand = new ConnectToDevice(_deviceUuid, OnConnected, OnDisconnected);
             BleManager.Instance.QueueCommand(_connectCommand);
         }
         else
         {
+            // FindObjectOfType<GameFlowManager>().bluetoothConnected = false;
             _connectCommand.Disconnect();
         }
     }
@@ -78,7 +80,7 @@ public class DeviceButton : MonoBehaviour
         _isConnected = true;
         _deviceButtonText.text = "Disconnect";
         FindObjectOfType<ExampleBleInteractor>().deviceUuid = _deviceUuid;
-        // SubscribeToExampleService();
+        SubscribeToExampleService();
     }
 
     private void OnDisconnected(string deviceUuid)

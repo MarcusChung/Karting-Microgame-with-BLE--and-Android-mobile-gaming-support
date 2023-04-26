@@ -4,7 +4,7 @@ using UnityEngine.Playables;
 using KartGame.KartSystems;
 using UnityEngine.SceneManagement;
 
-public enum GameState{Play, Won, Lost}
+public enum GameState { Play, Won, Lost }
 
 public class GameFlowManager : MonoBehaviour
 {
@@ -26,7 +26,6 @@ public class GameFlowManager : MonoBehaviour
 
     [Tooltip("Prefab for the win game message")]
     public DisplayMessage winDisplayMessage;
-
     public PlayableDirector raceCountdownTrigger;
 
     [Header("Lose")]
@@ -47,6 +46,7 @@ public class GameFlowManager : MonoBehaviour
     string m_SceneToLoad;
     float elapsedTimeBeforeEndScene = 0;
     [SerializeField] private bool allowPhoneVibration;
+    public bool bluetoothConnected;
     void Start()
     {
         if (autoFindKarts)
@@ -60,7 +60,7 @@ public class GameFlowManager : MonoBehaviour
         }
 
         m_ObjectiveManager = FindObjectOfType<ObjectiveManager>();
-		DebugUtility.HandleErrorIfNullFindObject<ObjectiveManager, GameFlowManager>(m_ObjectiveManager, this);
+        DebugUtility.HandleErrorIfNullFindObject<ObjectiveManager, GameFlowManager>(m_ObjectiveManager, this);
 
         m_TimeManager = FindObjectOfType<TimeManager>();
         DebugUtility.HandleErrorIfNullFindObject<TimeManager, GameFlowManager>(m_TimeManager, this);
@@ -73,7 +73,7 @@ public class GameFlowManager : MonoBehaviour
         m_TimeManager.StopRace();
         foreach (ArcadeKart k in karts)
         {
-			k.SetCanMove(false);
+            k.SetCanMove(false);
         }
         //run race countdown animation
         ShowRaceCountdownAnimation();
@@ -82,32 +82,36 @@ public class GameFlowManager : MonoBehaviour
         StartCoroutine(CountdownThenStartRaceRoutine());
     }
 
-    IEnumerator CountdownThenStartRaceRoutine() {
+    IEnumerator CountdownThenStartRaceRoutine()
+    {
         yield return new WaitForSeconds(3f);
         StartRace();
     }
 
-    void StartRace() {
+    void StartRace()
+    {
         foreach (ArcadeKart k in karts)
         {
-			k.SetCanMove(true);
+            k.SetCanMove(true);
         }
         m_TimeManager.StartRace();
     }
     public void Vibrate()
     {
         // Make the phone vibrate for half a second
-        if (allowPhoneVibration){
-        Handheld.Vibrate();
-        Invoke("StopVibrating", 0.5f);
+        if (allowPhoneVibration)
+        {
+            Handheld.Vibrate();
+            Invoke("StopVibrating", 0.5f);
         }
     }
 
     public void QuickVibrate()
     {
-        if (allowPhoneVibration){
-        Handheld.Vibrate();
-        Invoke("StopVibrating", 0.3f);
+        if (allowPhoneVibration)
+        {
+            Handheld.Vibrate();
+            Invoke("StopVibrating", 0.3f);
         }
     }
 
@@ -116,29 +120,30 @@ public class GameFlowManager : MonoBehaviour
         // Debug.Log("Vibration Stopped");
     }
 
-    void ShowRaceCountdownAnimation() {
+    void ShowRaceCountdownAnimation()
+    {
         raceCountdownTrigger.Play();
         // Vibrate();
     }
 
-    IEnumerator ShowObjectivesRoutine() {
+    IEnumerator ShowObjectivesRoutine()
+    {
         while (m_ObjectiveManager.Objectives.Count == 0)
             yield return null;
         yield return new WaitForSecondsRealtime(0.2f);
         for (int i = 0; i < m_ObjectiveManager.Objectives.Count; i++)
         {
-           if (m_ObjectiveManager.Objectives[i].displayMessage)m_ObjectiveManager.Objectives[i].displayMessage.Display();
-           yield return new WaitForSecondsRealtime(1f);
+            if (m_ObjectiveManager.Objectives[i].displayMessage) m_ObjectiveManager.Objectives[i].displayMessage.Display();
+            yield return new WaitForSecondsRealtime(1f);
         }
     }
 
     void Update()
     {
-        string collisionObjectName = FindObjectOfType<ArcadeKart>().collisionObjectName;
         if (gameState != GameState.Play)
         {
             elapsedTimeBeforeEndScene += Time.deltaTime;
-            if(elapsedTimeBeforeEndScene >= endSceneLoadDelay)
+            if (elapsedTimeBeforeEndScene >= endSceneLoadDelay)
             {
 
                 float timeRatio = 1 - (m_TimeLoadEndGameScene - Time.time) / endSceneLoadDelay;
@@ -165,8 +170,19 @@ public class GameFlowManager : MonoBehaviour
 
             if (m_TimeManager.IsFinite && m_TimeManager.IsOver)
                 EndGame(false);
-            if (collisionObjectName.StartsWith("GameOverRock")){
-                EndGame(true);
+            if (FindObjectOfType<ArcadeKart>().collisionObjectName == "GameOverRock")
+            {
+
+                m_TimeManager.StopRace();
+                endGameFadeCanvasGroup.gameObject.SetActive(true);
+                gameState = GameState.Lost;
+
+                m_SceneToLoad = loseSceneName;
+                m_TimeLoadEndGameScene = Time.time + endSceneLoadDelay + delayBeforeFadeToBlack;
+
+                // create a game message
+                loseDisplayMessage.delayBeforeShowing = delayBeforeWinMessage;
+                loseDisplayMessage.gameObject.SetActive(true);
             }
         }
     }
