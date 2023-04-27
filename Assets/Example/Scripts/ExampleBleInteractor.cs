@@ -13,6 +13,8 @@ public class ExampleBleInteractor : MonoBehaviour
     private float scanTimer = 0f;
     private bool isScanning = false;
     public string deviceUuid;
+
+    private ArcadeKart arcadeKart;
     private const string SERVICE_ADDRESS = "180a";
     private const string CHARACTERISTIC_ADDRESS = "2a57";
     private const string CHARACTERISTIC_DATA_0 = "0";
@@ -105,26 +107,11 @@ public class ExampleBleInteractor : MonoBehaviour
         BleManager.Instance.QueueCommand(new WriteToCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, CHARACTERISTIC_DATA_11));
     }
 
+    void Start()
+    {
+        arcadeKart = FindObjectOfType<ArcadeKart>();
+    }
 
-    // public void ReadFromCharacteristic(){
-    //     Debug.Log("characteristic read");
-    //     BleManager.Instance.QueueCommand(new ReadFromCharacteristic(deviceUuid, SERVICE_ADDRESS, CHARACTERISTIC_ADDRESS, (byte[] value) =>
-    //     {
-    //         charValue = Encoding.UTF8.GetString(value);
-    //     }));
-    //     BleManager.Instance.QueueCommand(_readFromCharacteristic);
-
-    // }
-
-    // call vLoudEngine depending on the local speed of the kart.
-
-        // collisionText.text = charValue;
-        // if (localSpeed > 0.8f && !isColliding && engineCommandCalled == false) 
-        // {
-        //     VquietEngine();
-        // } else if(charValue == "7" && localSpeed > 0.8f){
-        //     engineCommandCalled = true;
-        // }
     private void Update()
     {
         if (isScanning)
@@ -136,11 +123,11 @@ public class ExampleBleInteractor : MonoBehaviour
                 isScanning = false;
             }
         }
-        bool doneCommand = FindObjectOfType<ArcadeKart>().collisionDone;
-        bool isColliding = FindObjectOfType<ArcadeKart>().vCollisionCheck;
-        string collisionObjectName = FindObjectOfType<ArcadeKart>().collisionObjectName;
-        float localSpeed = FindObjectOfType<ArcadeKart>().LocalSpeed();
-        bool kartInAir = FindObjectOfType<ArcadeKart>().m_InAir;
+        bool doneCommand = arcadeKart.collisionDone;
+        bool isColliding = arcadeKart.vCollisionCheck;
+        string collisionObjectName = arcadeKart.collisionObjectName;
+        float localSpeed = arcadeKart.LocalSpeed();
+        bool kartInAir = arcadeKart.m_InAir;
 
         if (kartInAir == true)
         {
@@ -150,7 +137,7 @@ public class ExampleBleInteractor : MonoBehaviour
         if (isColliding && !doneCommand && deviceUuid != null)
         {
             // Debug.Log("Collision Detected at speed: " + localSpeed);
-            FindObjectOfType<ArcadeKart>().collisionDone = true;
+            arcadeKart.collisionDone = true;
 
             if (collisionObjectName.StartsWith("CrashObject"))
             {

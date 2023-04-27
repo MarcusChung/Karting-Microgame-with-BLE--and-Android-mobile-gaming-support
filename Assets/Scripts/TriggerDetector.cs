@@ -4,25 +4,37 @@ using UnityEngine;
 
 public class TriggerDetector : MonoBehaviour
 {
+    private ExampleBleInteractor bleInteractor;
+
+    private void Start()
+    {
+        bleInteractor = FindObjectOfType<ExampleBleInteractor>();
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player") && gameObject.name.StartsWith("InvisiblePreTrigger"))
         {
-            FindObjectOfType<ExampleBleInteractor>().VstrongTap();
+            //unused
+            bleInteractor.VstrongTap();
             gameObject.SetActive(false);
         }
         else if (other.gameObject.CompareTag("PhysicsBall") && gameObject.name.StartsWith("GoalNet"))
         {
-            FindObjectOfType<ExampleBleInteractor>().Vgoal();
+            bleInteractor.Vgoal();
         }
         else if (other.gameObject.CompareTag("Player") && gameObject.name.StartsWith("InvisibleRampTrigger"))
         {
-            FindObjectOfType<ExampleBleInteractor>().Vwarning();
+            bleInteractor.Vwarning();
         }
         else if (other.gameObject.CompareTag("Player") && gameObject.name.StartsWith("InvisibleTrackTrigger"))
         {
-            FindObjectOfType<ExampleBleInteractor>().Vtap();
+            bleInteractor.Vtap();
             gameObject.SetActive(false);
+        }
+        else if (other.gameObject.CompareTag("Player") && gameObject.name.StartsWith("Checkpoint"))
+        {
+            bleInteractor.Vtap();
         }
     }
 }

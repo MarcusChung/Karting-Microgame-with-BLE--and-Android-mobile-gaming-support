@@ -6,11 +6,14 @@ public class WarningMessagePopup : MonoBehaviour
 {
 
     public GameObject warningDisplay;
-
-
+    private GameFlowManager gameFlowManager;
+    private void Start()
+    {
+        gameFlowManager = FindObjectOfType<GameFlowManager>();
+    }
     private void OnTriggerEnter(Collider other)
     {
-        if (FindObjectOfType<GameFlowManager>().bluetoothConnected == false)
+        if (gameFlowManager.bluetoothConnected == false)
         {
             ShowWarning();
             gameObject.SetActive(false);
